@@ -6,7 +6,7 @@ const tourSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      require: [true, 'A tour must have a name!'],
+      required: [true, 'A tour must have a name!'],
       unique: true,
       trim: true,
       maxlength: [40, 'A tour name must have less or equal 40 characters'],
@@ -16,15 +16,15 @@ const tourSchema = new mongoose.Schema(
     slug: String,
     duration: {
       type: Number,
-      require: [true, 'A tour must have a duaration'],
+      required: [true, 'A tour must have a duaration'],
     },
     maxGroupSize: {
       type: Number,
-      require: [true, 'A tour must have a group size'],
+      required: [true, 'A tour must have a group size'],
     },
     difficulty: {
       type: String,
-      require: [true, 'A tour must have a difficulty'],
+      required: [true, 'A tour must have a difficulty'],
       enum: {
         values: ['easy', 'medium', 'difficul'],
         message: 'Difficulty is either: easy, medium, difficult',
@@ -42,7 +42,7 @@ const tourSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      require: [true, 'A tour must have a price!'],
+      required: [true, 'A tour must have a price!'],
     },
     priceDiscount: {
       type: Number,
@@ -56,7 +56,7 @@ const tourSchema = new mongoose.Schema(
     summary: {
       type: String,
       trim: true,
-      require: [true, 'A tour must have a summary'],
+      required: [true, 'A tour must have a summary'],
     },
     description: {
       type: String,
@@ -64,7 +64,7 @@ const tourSchema = new mongoose.Schema(
     },
     imageCover: {
       type: String,
-      require: [true, 'A tour must have a cover image'],
+      required: [true, 'A tour must have a cover image'],
     },
     images: [String],
     createAt: {
