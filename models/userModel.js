@@ -36,6 +36,9 @@ const userSchema = new mongooes.Schema({
       },
     },
   },
+  passwordChangedAt: {
+    type: Date,
+  },
 });
 
 userSchema.methods.correctPassword = async function (
@@ -56,6 +59,16 @@ userSchema.pre('save', function (next) {
   this.passwordConfirm = undefined;
   next();
 });
+
+userSchema.methods.changePasswordAfer = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10,
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+};
 
 const User = mongooes.model('User', userSchema);
 module.exports = User;
