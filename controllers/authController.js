@@ -13,18 +13,22 @@ const signToken = (id) => {
   });
 };
 
-exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create(req.body);
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
 
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
+  res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      user: newUser,
+      user,
     },
   });
+};
+
+exports.signup = catchAsync(async (req, res, next) => {
+  const newUser = await User.create(req.body);
+
+  createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -40,11 +44,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password!', 401));
   }
   //If everything ok, send token to client
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -89,7 +89,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     //roles = ['admin', 'lead-guide'] role='user'
-    console.log(roles, req.user.role);
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError('You do not have permission to perform this action.', 403),
@@ -166,10 +165,27 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   //Update changedPasswordAt property for the user
 
   //Log the user in, send JWT
-  const token = signToken(user._id);
+  createSendToken(user, 201, res);
+});
 
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  //Get user
+  const user = await User.findById(req.user.id).select('+password');
+
+  //Check if POSTed current password is correct
+  const isCorrectPassword = user.correctPassword(
+    req.body.passwordCurrent,
+    user.password,
+  );
+
+  if (!isCorrectPassword)
+    return next('Password you provide is not correct!', 401);
+
+  //Update password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+
+  //Log user in, send JWT
+  createSendToken(user, 200, res);
 });
