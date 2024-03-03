@@ -47,6 +47,11 @@ const userSchema = new mongooes.Schema({
   },
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 userSchema.methods.correctPassword = async function (
@@ -97,6 +102,11 @@ userSchema.methods.createPasswordResetToken = function () {
 
   return resetToken;
 };
+
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
 
 const User = mongooes.model('User', userSchema);
 module.exports = User;
