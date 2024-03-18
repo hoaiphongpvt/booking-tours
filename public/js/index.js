@@ -2,12 +2,14 @@
 import { login } from './login.js';
 import { logout } from './logout.js';
 import { updateData } from './updateSettings.js';
+import { bookTour } from './stripe.js';
 
 // DOM ELEMENTS
 const btnLogin = document.getElementById('btn-login');
 const btnLogout = document.getElementById('btn-logout');
 const btnUpdate = document.getElementById('btn-update');
 const btnUpdatePassword = document.getElementById('btn-updatePassword');
+const btnBook = document.getElementById('book-tour');
 // VALUES
 
 // DELEGATION
@@ -55,5 +57,14 @@ if (btnUpdatePassword) {
     document.getElementById('password-current').value = '';
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
+  });
+}
+
+if (btnBook) {
+  btnBook.addEventListener('click', (e) => {
+    e.target.textContent = 'Processing...';
+    const tourID = e.target.dataset.tourId;
+    const userID = e.target.dataset.userId;
+    bookTour(tourID, userID);
   });
 }
