@@ -5,9 +5,8 @@ export const bookTour = async (tourID, userID) => {
   try {
     //Get checkout session from API
     const session = await axios.get(
-      `http://127.0.0.1:3000/api/v1/bookings/checkout-session/${tourID}/${userID}`,
-    );
-    console.log(session.data); // In ra dữ liệu nhận được từ API
+      `/api/v1/bookings/checkout-session/${tourID}/${userID}`,
+    ); // In ra dữ liệu nhận được từ API
     // Tiếp tục xử lý dữ liệu hoặc tạo checkout form tại đây
 
     await stripe.redirectToCheckout({

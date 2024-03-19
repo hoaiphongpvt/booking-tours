@@ -7,6 +7,7 @@ const hpp = require('hpp');
 const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const globalErrorHandle = require('./controllers/errorController');
@@ -75,9 +76,10 @@ app.use(
   }),
 );
 
+app.use(compression());
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.cookies);
   next();
 });
 
