@@ -20,7 +20,7 @@ const bookingController = require('./controllers/bookingController');
 
 const app = express();
 
-app.enable('trust proxy');
+// app.enable('trust proxy');
 
 //View engine
 app.set('view engine', 'pug');

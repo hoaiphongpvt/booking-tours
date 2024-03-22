@@ -1,6 +1,7 @@
 // import '@babel/polyfill';
 import { login } from './login.js';
 import { logout } from './logout.js';
+import { signup } from './signup.js';
 import { updateData } from './updateSettings.js';
 import { bookTour } from './stripe.js';
 
@@ -10,6 +11,7 @@ const btnLogout = document.getElementById('btn-logout');
 const btnUpdate = document.getElementById('btn-update');
 const btnUpdatePassword = document.getElementById('btn-updatePassword');
 const btnBook = document.getElementById('book-tour');
+const btnSignup = document.getElementById('btn-signup');
 // VALUES
 
 // DELEGATION
@@ -65,5 +67,17 @@ if (btnBook) {
     const tourID = e.target.dataset.tourId;
     const userID = e.target.dataset.userId;
     bookTour(tourID, userID);
+  });
+}
+
+if (btnSignup) {
+  btnSignup.addEventListener('click', (e) => {
+    e.target.textContent = 'Processing...';
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+    signup(name, email, password, passwordConfirm);
   });
 }
